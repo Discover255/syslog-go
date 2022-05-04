@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net"
+
+	"github.com/discover255/syslog-go/pkg/matcher"
+	"github.com/discover255/syslog-go/pkg/mqclient"
 )
 
 func StartListen() {
@@ -12,8 +15,10 @@ func StartListen() {
 		log.Fatal(err)
 	}
 	fmt.Println("Syslog server is listening...")
-	buffer := make([]byte, 1024*4)
+	buffer := make([]byte, 1024*16)
 	var raw []byte
+	mqclient.ProducerInit()
+	defer mqclient.Close()
 	for {
 		n, remoteAddr, err := conn.ReadFromUDP(buffer)
 		if err != nil {
@@ -21,9 +26,6 @@ func StartListen() {
 		}
 		raw = make([]byte, n)
 		copy(raw, buffer[:n])
-		go func() {
-			fmt.Println(remoteAddr)
-			fmt.Println(string(raw[:]))
-		}()
+		go matcher.MatchAndSend(raw, remoteAddr)
 	}
 }

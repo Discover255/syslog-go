@@ -1,1 +1,4 @@
 .vscode
+*.yaml
+target
+go.sum

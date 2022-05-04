@@ -1,0 +1,5 @@
+ - send to pulsar
+ - parse syslog
+ - support config file (port, pulsar address etc.)
+ - support tcp
+ - support kafka

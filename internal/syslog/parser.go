@@ -1,0 +1,5 @@
+package syslog
+
+func Parse() {
+
+}
